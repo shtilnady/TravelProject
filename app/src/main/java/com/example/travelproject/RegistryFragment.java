@@ -1,7 +1,9 @@
 package com.example.travelproject;
 
 import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -41,9 +43,10 @@ public class RegistryFragment extends Fragment {
     EditText repeatPassword;
     AccountsDatabase accountsDatabase;
     Account account;
-    private static final String key = "Gj11cnegfvDe16Cg17R19R20";
-    private static final String initVector = "yfFFbufrjptbayan";
-    String pass;
+    SharedPreferences settings;
+//    private static final String key = "Gj11cnegfvDe16Cg17R19R20";
+//    private static final String initVector = "yfFFbufrjptbayan";
+//    String pass;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -72,7 +75,6 @@ public class RegistryFragment extends Fragment {
         });
         create = getView().findViewById(R.id.b_create);
         create.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 if (createPassword.getText().toString().length() < 7){
@@ -80,57 +82,79 @@ public class RegistryFragment extends Fragment {
                 } else if (!createPassword.getText().toString().equals(repeatPassword.getText().toString())) {
                     Toast.makeText(getContext(), "Неверно введён пароль!", Toast.LENGTH_SHORT).show();
                 } else {
-                    try {
-                        IvParameterSpec iv = new IvParameterSpec(initVector.getBytes());
-                        SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(), "AES");
-                        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-                        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
-                        byte[] encrypted = cipher.doFinal(createPassword.getText().toString().getBytes());
-                        pass = encrypted.toString();
-                        account = new Account(name.getText().toString(), pass);
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                accountsDatabase.getAccountDao().insertAccount(account);
-                                NotificationManagerCompat.from(getContext())
-                                        .notify(1, new NotificationCompat.Builder(getContext(), "User_ID")
-                                                .setSmallIcon(R.drawable.preview)
-                                                .setContentTitle("Ваш ID - " + account.getId())
-                                                .setContentText("При входе в приложение вам понадобиться ввести ID и пароль!")
-                                                .setPriority(NotificationCompat.PRIORITY_DEFAULT).build());
-                            }
-                        }.start();
-                        AccountManager.logIn(account);
-                        NotificationManagerCompat.from(getContext())
-                                .notify(1, new NotificationCompat.Builder(getContext(), "User_ID")
-                                        .setSmallIcon(R.drawable.preview)
-                                        .setContentTitle("Ваш ID - " + account.getId())
-                                        .setContentText("При входе в приложение вам понадобится ввести ID и пароль!")
-                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT).build());
-                        Intent i = new Intent(getActivity(), MyTripsActivity.class);
-                        startActivity(i);
-                    } catch (InvalidAlgorithmParameterException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), "InvalidAlgorithmParameterException", Toast.LENGTH_SHORT).show();
-                    } catch (NoSuchPaddingException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), "NoSuchPaddingException пароль", Toast.LENGTH_SHORT).show();
-                    } catch (IllegalBlockSizeException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), "IllegalBlockSizeException", Toast.LENGTH_SHORT).show();
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), "NoSuchAlgorithmException", Toast.LENGTH_SHORT).show();
-                    } catch (BadPaddingException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), "BadPaddingException", Toast.LENGTH_SHORT).show();
-                    } catch (InvalidKeyException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), "InvalidKeyException", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), "Произошла ошибка при попытке зашифровать пароль", Toast.LENGTH_SHORT).show();
-                    }
+                    account = new Account(name.getText().toString(), createPassword.getText().toString());
+                    new Thread() {
+                        @Override
+                        public void run() {
+//                            accountsDatabase.getAccountDao().deleteAll();
+                            accountsDatabase.getAccountDao().insertAccount(account);
+                        }
+                    }.start();
+                    AccountManager.logIn(account);
+                    NotificationManagerCompat.from(getContext())
+                            .notify(1, new NotificationCompat.Builder(getContext(), "User_ID")
+                                    .setSmallIcon(R.drawable.preview)
+                                    .setContentTitle("Ваш ID - " + account.getId())
+                                    .setContentText("При входе в приложение вам понадобится ввести ID и пароль!")
+                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT).build());
+                    settings = getActivity().getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putBoolean("Registered", true);
+                    editor.putInt("Account_ID", account.getId());
+                    editor.commit();
+                    Intent i = new Intent(getActivity(), MyTripsActivity.class);
+                    startActivity(i);
+//                    try {
+//                        IvParameterSpec iv = new IvParameterSpec(initVector.getBytes());
+//                        SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(), "AES");
+//                        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+//                        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+//                        byte[] encrypted = cipher.doFinal(createPassword.getText().toString().getBytes());
+//                        pass = encrypted.toString();
+//                        account = new Account(name.getText().toString(), pass);
+//                        new Thread() {
+//                            @Override
+//                            public void run() {
+//                                accountsDatabase.getAccountDao().insertAccount(account);
+//                                NotificationManagerCompat.from(getContext())
+//                                        .notify(1, new NotificationCompat.Builder(getContext(), "User_ID")
+//                                                .setSmallIcon(R.drawable.preview)
+//                                                .setContentTitle("Ваш ID - " + account.getId())
+//                                                .setContentText("При входе в приложение вам понадобиться ввести ID и пароль!")
+//                                                .setPriority(NotificationCompat.PRIORITY_DEFAULT).build());
+//                            }
+//                        }.start();
+//                        AccountManager.logIn(account);
+//                        NotificationManagerCompat.from(getContext())
+//                                .notify(1, new NotificationCompat.Builder(getContext(), "User_ID")
+//                                        .setSmallIcon(R.drawable.preview)
+//                                        .setContentTitle("Ваш ID - " + account.getId())
+//                                        .setContentText("При входе в приложение вам понадобится ввести ID и пароль!")
+//                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT).build());
+//                        Intent i = new Intent(getActivity(), MyTripsActivity.class);
+//                        startActivity(i);
+//                    } catch (InvalidAlgorithmParameterException e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(getContext(), "InvalidAlgorithmParameterException", Toast.LENGTH_SHORT).show();
+//                    } catch (NoSuchPaddingException e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(getContext(), "NoSuchPaddingException пароль", Toast.LENGTH_SHORT).show();
+//                    } catch (IllegalBlockSizeException e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(getContext(), "IllegalBlockSizeException", Toast.LENGTH_SHORT).show();
+//                    } catch (NoSuchAlgorithmException e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(getContext(), "NoSuchAlgorithmException", Toast.LENGTH_SHORT).show();
+//                    } catch (BadPaddingException e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(getContext(), "BadPaddingException", Toast.LENGTH_SHORT).show();
+//                    } catch (InvalidKeyException e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(getContext(), "InvalidKeyException", Toast.LENGTH_SHORT).show();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        Toast.makeText(getContext(), "Произошла ошибка при попытке зашифровать пароль", Toast.LENGTH_SHORT).show();
+//                    }
                 }
             }
         });

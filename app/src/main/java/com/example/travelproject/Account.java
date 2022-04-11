@@ -4,16 +4,15 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import org.jetbrains.annotations.NotNull;
+
 @Entity(tableName = "accounts")
 public class Account {
     @PrimaryKey (autoGenerate = true)
     private int id;
-    @ColumnInfo
+    @ColumnInfo @NotNull
     private String name = "";
-
-
-
-    @ColumnInfo
+    @ColumnInfo @NotNull
     private String password = "";
 
     public Account(String name, String password){

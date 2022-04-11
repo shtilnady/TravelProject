@@ -13,6 +13,8 @@ public interface AccountDao {
     void insertAccount(Account account);
     @Delete
     void deleteAccount(Account account);
+    @Query("DELETE FROM accounts")
+    void deleteAll();
     @Query("SELECT * FROM accounts WHERE id = :id_")
     Account getAccount(int id_);
     @Query("SELECT * FROM accounts")
@@ -21,4 +23,6 @@ public interface AccountDao {
     int getSize();
     @Query("SELECT password FROM accounts WHERE id = :id_")
     String getPasswordWithId(int id_);
+    @Query("SELECT EXISTS(SELECT id FROM accounts WHERE id = :id_)")
+    boolean contains(int id_);
 }
