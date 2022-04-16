@@ -4,12 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable-anydpi/ic_action_name.xml" value="0.24444444444444444" />
+        <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable-anydpi/ic_name_id.xml" value="0.164" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.24722222222222223" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable/back.xml" value="0.165" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable/buttonenter.xml" value="0.24444444444444444" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable/ic_launcher_background.xml" value="0.24722222222222223" />
+        <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable/ic_menu_camera.xml" value="0.164" />
+        <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable/ic_name_and_id.xml" value="0.164" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable/mail.xml" value="0.21" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable/rectangle30.xml" value="0.24444444444444444" />
+        <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/drawable/side_nav_bar.xml" value="0.164" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/activity_log.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/activity_main.xml" value="0.12" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/activity_my_trips.xml" value="0.25" />
@@ -18,12 +22,14 @@
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/enter_layout.xml" value="0.25" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/entry_fragment.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/entry_layout.xml" value="0.1" />
+        <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/fragment_friends.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/fragment_gallery.xml" value="0.27291666666666664" />
+        <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/fragment_trips.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/nav_header_my_trips.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/registry_fragment.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/layout/registry_layout.xml" value="0.1" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/menu/activity_my_trips_drawer.xml" value="0.27291666666666664" />
-        <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/menu/my_trips.xml" value="0.27291666666666664" />
+        <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/menu/my_trips.xml" value="0.25" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.24722222222222223" />
         <entry key="..\:/Users/N/AndroidStudioProjects/TravelProject/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
       </map>

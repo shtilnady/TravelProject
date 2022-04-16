@@ -15,7 +15,7 @@
             android:label="@string/title_activity_my_trips"
             android:theme="@style/Theme.TravelProject.NoActionBar" />
         <activity
-            android:name=".LogActivity"
+            android:name=".log.LogActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,7 +1,6 @@
-package com.example.travelproject;
+package com.example.travelproject.log;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.room.Room;
 
@@ -18,12 +17,16 @@ public class AccountManager {
             if (accountsDatabase == null){
                 accountsDatabase = Room
                         .databaseBuilder(context, AccountsDatabase.class, "accounts.db")
+                        .fallbackToDestructiveMigration()
                         .build();
             }
             return accountsDatabase;
         }
     }
 
+    public static Account getAccount() {
+        return account;
+    }
     public static void logIn(Account acc){
         account = acc;
     }

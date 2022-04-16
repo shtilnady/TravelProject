@@ -1,49 +1,37 @@
-package com.example.travelproject;
+package com.example.travelproject.log;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+import com.example.travelproject.MyTripsActivity;
+import com.example.travelproject.R;
 
 public class RegistryFragment extends Fragment {
     ImageButton back;
     Button create;
     Fragment registryFragment;
-    EditText name;
+    EditText login;
     EditText createPassword;
     EditText repeatPassword;
     AccountsDatabase accountsDatabase;
     Account account;
     SharedPreferences settings;
+    TextView textView;
+    int flag;
 //    private static final String key = "Gj11cnegfvDe16Cg17R19R20";
 //    private static final String initVector = "yfFFbufrjptbayan";
 //    String pass;
@@ -60,9 +48,10 @@ public class RegistryFragment extends Fragment {
         accountsDatabase = AccountManager.getInstance(getContext());
         back = getView().findViewById(R.id.b_backtoenter);
         registryFragment = new EntryFragment();
-        name = getView().findViewById(R.id.reg_name);
+        login = getView().findViewById(R.id.reg_name);
         createPassword = getView().findViewById(R.id.et_create_password);
         repeatPassword = getView().findViewById(R.id.et_repeat_password);
+        textView = getView().findViewById(R.id.text_toreg);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,12 +66,30 @@ public class RegistryFragment extends Fragment {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                flag = 0;
+                new Thread(){
+                    @Override
+                    public void run() {
+                        if (accountsDatabase.getAccountDao().contains(login.getText().toString()))
+                            flag = -1;
+                        else
+                            flag = 1;
+                    }
+                }.start();
+                while (flag == 0){
+                    System.out.println(0);
+                }
                 if (createPassword.getText().toString().length() < 7){
-                    Toast.makeText(getContext(), "Пароль слишком короткий!", Toast.LENGTH_SHORT).show();
+                    textView.setText("Пароль слишком короткий!");
+                    textView.setTextColor(Color.RED);
                 } else if (!createPassword.getText().toString().equals(repeatPassword.getText().toString())) {
-                    Toast.makeText(getContext(), "Неверно введён пароль!", Toast.LENGTH_SHORT).show();
+                    textView.setText("Неверно введён пароль!");
+                    textView.setTextColor(Color.RED);
+                } else if (flag == -1){
+                    textView.setText("Пользователь с таким логином уже есть");
+                    textView.setTextColor(Color.RED);
                 } else {
-                    account = new Account(name.getText().toString(), createPassword.getText().toString());
+                    account = new Account(login.getText().toString(), createPassword.getText().toString());
                     new Thread() {
                         @Override
                         public void run() {
@@ -91,16 +98,10 @@ public class RegistryFragment extends Fragment {
                         }
                     }.start();
                     AccountManager.logIn(account);
-                    NotificationManagerCompat.from(getContext())
-                            .notify(1, new NotificationCompat.Builder(getContext(), "User_ID")
-                                    .setSmallIcon(R.drawable.preview)
-                                    .setContentTitle("Ваш ID - " + account.getId())
-                                    .setContentText("При входе в приложение вам понадобится ввести ID и пароль!")
-                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT).build());
                     settings = getActivity().getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putBoolean("Registered", true);
-                    editor.putInt("Account_ID", account.getId());
+                    editor.putString("Account_ID", account.getLogin());
                     editor.commit();
                     Intent i = new Intent(getActivity(), MyTripsActivity.class);
                     startActivity(i);

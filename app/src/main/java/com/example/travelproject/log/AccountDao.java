@@ -1,4 +1,4 @@
-package com.example.travelproject;
+package com.example.travelproject.log;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -11,18 +11,16 @@ import java.util.List;
 public interface AccountDao {
     @Insert
     void insertAccount(Account account);
-    @Delete
-    void deleteAccount(Account account);
     @Query("DELETE FROM accounts")
     void deleteAll();
-    @Query("SELECT * FROM accounts WHERE id = :id_")
-    Account getAccount(int id_);
+    @Query("SELECT * FROM accounts WHERE login = :login")
+    Account getAccount(String login);
     @Query("SELECT * FROM accounts")
     List<Account> getAll();
     @Query("SELECT COUNT(*) FROM accounts")
     int getSize();
-    @Query("SELECT password FROM accounts WHERE id = :id_")
-    String getPasswordWithId(int id_);
-    @Query("SELECT EXISTS(SELECT id FROM accounts WHERE id = :id_)")
-    boolean contains(int id_);
+    @Query("SELECT password FROM accounts WHERE login = :login")
+    String getPasswordWithId(String login);
+    @Query("SELECT EXISTS(SELECT login FROM accounts WHERE login = :login)")
+    boolean contains(String login);
 }

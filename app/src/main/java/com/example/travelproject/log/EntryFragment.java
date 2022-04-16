@@ -1,4 +1,4 @@
-package com.example.travelproject;
+package com.example.travelproject.log;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,25 +16,14 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.Nullable;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+import com.example.travelproject.MyTripsActivity;
+import com.example.travelproject.R;
 
 public class EntryFragment extends Fragment {
     TextView wantToReg;
     Button enter;
     Fragment registryFragment;
-    EditText userID;
+    EditText login;
     EditText password;
     AccountsDatabase accountsDatabase;
     SharedPreferences settings;
@@ -57,7 +46,7 @@ public class EntryFragment extends Fragment {
     public void onStart() {
         wantToReg = getView().findViewById(R.id.wanttoreg);
         registryFragment = new RegistryFragment();
-        userID = getView().findViewById(R.id.et_user_id);
+        login = getView().findViewById(R.id.et_login);
         password = getView().findViewById(R.id.et_entry_password);
         accountsDatabase = AccountManager.getInstance(getContext());
         wantToReg.setOnClickListener(new View.OnClickListener() {
@@ -82,16 +71,16 @@ public class EntryFragment extends Fragment {
                         public void run() {
                             synchronized (password.getText()) {
                                 flag = 0;
-                                if (accountsDatabase.getAccountDao().contains(Integer.parseInt(userID.getText().toString()))) {
+                                if (accountsDatabase.getAccountDao().contains(login.getText().toString())) {
                                     account = accountsDatabase
                                             .getAccountDao()
-                                            .getAccount(Integer.parseInt(userID.getText().toString()));
+                                            .getAccount(login.getText().toString());
                                     flag = 1;
                                 } else {
                                     handler.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(getContext(), "Нет пользователя с таким ID ", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "Нет пользователя с таким логином", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                     flag = -1;
@@ -107,7 +96,7 @@ public class EntryFragment extends Fragment {
                         settings = getActivity().getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putBoolean("Registered", true);
-                        editor.putInt("Account_ID", account.getId());
+                        editor.putString("Account_ID", account.getLogin());
                         editor.commit();
                         Intent i = new Intent(getActivity(), MyTripsActivity.class);
                         startActivity(i);
