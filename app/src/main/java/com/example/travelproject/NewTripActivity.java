@@ -41,24 +41,19 @@ public class NewTripActivity extends AppCompatActivity {
                         dateFrom.getText().toString(),
                         dateTo.getText().toString(),
                         description.getText().toString());
+                flag = 0;
                 new Thread(){
                     @Override
                     public void run() {
                         TripManager.getInstance(getApplicationContext())
                                 .getTripDao().
                                 insertTrip(trip);
-//                        list = TripManager
-//                                .getInstance(getApplicationContext())
-//                                .getTripDao()
-//                                .getAll(getSharedPreferences("Authorisation", Context.MODE_PRIVATE)
-//                                        .getString("Account_ID", ""));
                         flag = 1;
                     }
                 }.start();
                 while (flag == 0) {}
                 TripManager.getAdapter(list).addTrip(trip);
-                Intent i = new Intent(getApplicationContext(), MyTripsActivity.class);
-                startActivity(i);
+                finish();
             }
         });
     }

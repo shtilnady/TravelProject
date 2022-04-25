@@ -20,11 +20,12 @@ public class LogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log);
         getSupportActionBar().hide();
         settings = getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
         if (settings.getBoolean("Registered", false)){
             Intent i = new Intent(this, MyTripsActivity.class);
             startActivity(i);
         } else {
+//        settings.edit().putBoolean("Registered", false).apply();
+//        settings.edit().putString("Account_ID", "").apply();
             Fragment entryFragment = new EntryFragment();
             getSupportFragmentManager()
                     .beginTransaction()

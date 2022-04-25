@@ -100,8 +100,8 @@ public class RegistryFragment extends Fragment {
                     AccountManager.logIn(account);
                     settings = getActivity().getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean("Registered", true);
-                    editor.putString("Account_ID", account.getLogin());
+                    editor.putBoolean("Registered", true).apply();
+                    editor.putString("Account_ID", account.getLogin()).apply();
                     editor.commit();
                     Intent i = new Intent(getActivity(), MyTripsActivity.class);
                     startActivity(i);

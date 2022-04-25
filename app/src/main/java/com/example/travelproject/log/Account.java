@@ -11,7 +11,7 @@ public class Account {
     @PrimaryKey @NotNull
     private String login;
     @ColumnInfo @NotNull
-    private String password = "";
+    private String password;
 
     public Account(String login, String password){
         this.login = login;
