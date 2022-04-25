@@ -1,5 +1,6 @@
 package com.example.travelproject.ui.trips;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,22 +9,48 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.travelproject.R;
+import com.example.travelproject.Trip;
+import com.example.travelproject.TripAdapter;
+import com.example.travelproject.TripManager;
 import com.example.travelproject.databinding.FragmentTripsBinding;
+import com.example.travelproject.log.AccountManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TripsFragment extends Fragment {
-
-private FragmentTripsBinding binding;
+    private FragmentTripsBinding binding;
+    List<Trip> list;
+    int flag = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
-        TripsViewModel tripsViewModel =
-                new ViewModelProvider(this).get(TripsViewModel.class);
 
     binding = FragmentTripsBinding.inflate(inflater, container, false);
     View root = binding.getRoot();
 
-        final TextView textView = binding.textTrips;
-        tripsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final RecyclerView recyclerTrips = binding.recyclerTrips;
+
+        recyclerTrips.setLayoutManager(new LinearLayoutManager(getContext()));
+        new Thread(){
+            @Override
+            public void run() {
+                list = TripManager
+                        .getInstance(getContext())
+                        .getTripDao()
+                        .getAll(getActivity()
+                                .getSharedPreferences("Authorisation", Context.MODE_PRIVATE)
+                                .getString("Account_ID", ""));
+                flag = 1;
+            }
+        }.start();
+
+        while (flag == 0) {}
+        recyclerTrips.setAdapter(TripManager.getAdapter(list));
         return root;
     }
 

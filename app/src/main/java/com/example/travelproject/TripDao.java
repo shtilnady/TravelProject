@@ -18,7 +18,7 @@ public interface TripDao {
     @Query("SELECT * FROM trips WHERE trip_id = :id_")
     Trip getTrip(int id_);
     @Query("SELECT * FROM trips WHERE account_id = :id_")
-    List<Trip> getAll(int id_);
+    List<Trip> getAll(String id_);
     @Query("SELECT EXISTS(SELECT trip_id FROM trips WHERE trip_id = :id_)")
     boolean contains(int id_);
 }

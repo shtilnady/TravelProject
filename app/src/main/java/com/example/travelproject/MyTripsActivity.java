@@ -1,16 +1,20 @@
 package com.example.travelproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
 
 import com.example.travelproject.log.AccountManager;
+import com.example.travelproject.log.LogActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,12 +23,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.travelproject.databinding.ActivityMyTripsBinding;
 
+
 public class MyTripsActivity extends AppCompatActivity {
+
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMyTripsBinding binding;
     SharedPreferences settings;
     TextView accountLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +42,8 @@ public class MyTripsActivity extends AppCompatActivity {
         binding.appBarMyTrips.bAddTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(view.getContext(), NewTripActivity.class);
+                startActivity(i);
             }
         });
         settings = getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
@@ -73,6 +80,20 @@ public class MyTripsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.my_trips, menu);
         return true;
     }
+
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        settings = getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
+//        switch (item.getItemId()) {
+//            case (R.id.action_exit):
+//                settings.edit().putBoolean("Registered", false);
+//                settings.edit().putString("Account_ID", "");
+//                Intent i = new Intent(this, LogActivity.class);
+//                startActivity(i);
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public boolean onSupportNavigateUp() {

@@ -4,9 +4,12 @@ import android.content.Context;
 
 import androidx.room.Room;
 
+import java.util.List;
+
 
 public class TripManager {
     private static TripsDatabase tripsDatabase;
+    private static TripAdapter tripAdapter;
 
     private TripManager(){
 
@@ -20,6 +23,14 @@ public class TripManager {
                         .build();
             }
             return tripsDatabase;
+        }
+    }
+    public static TripAdapter getAdapter(List<Trip> list){
+        synchronized (TripAdapter.class){
+            if (tripAdapter == null){
+                tripAdapter = new TripAdapter(list);
+            }
+            return tripAdapter;
         }
     }
 }

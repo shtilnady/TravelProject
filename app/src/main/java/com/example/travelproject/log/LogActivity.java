@@ -21,15 +21,15 @@ public class LogActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         settings = getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-        if (settings.getBoolean("Registered", false)){
-            Intent i = new Intent(this, MyTripsActivity.class);
-            startActivity(i);
-        } else {
+//        if (settings.getBoolean("Registered", false)){
+//            Intent i = new Intent(this, MyTripsActivity.class);
+//            startActivity(i);
+//        } else {
             Fragment entryFragment = new EntryFragment();
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.l_entry, entryFragment)
                     .commit();
-        }
+//        }
     }
 }

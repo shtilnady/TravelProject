@@ -11,7 +11,7 @@ public class Trip {
     @PrimaryKey (autoGenerate = true)
     private int trip_id;
     @ColumnInfo @NotNull
-    private int account_id;
+    private String account_id;
     @ColumnInfo @NotNull
     private String trip_title;
     @ColumnInfo
@@ -21,7 +21,7 @@ public class Trip {
     @ColumnInfo @NotNull
     private String finish;
 
-    public Trip(int account_id, String trip_title, String start, String finish, String description){
+    public Trip(String account_id, String trip_title, String start, String finish, String description){
         this.account_id = account_id;
         this.trip_title = trip_title;
         this.start = start;
@@ -37,11 +37,11 @@ public class Trip {
         this.trip_id = trip_id;
     }
 
-    public int getAccount_id() {
+    public String getAccount_id() {
         return account_id;
     }
 
-    public void setAccount_id(int account_id) {
+    public void setAccount_id(String account_id) {
         this.account_id = account_id;
     }
 
