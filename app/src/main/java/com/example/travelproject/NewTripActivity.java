@@ -3,19 +3,16 @@ package com.example.travelproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-
-import com.example.travelproject.log.AccountManager;
+import android.widget.ImageButton;
 
 import java.util.List;
 
 public class NewTripActivity extends AppCompatActivity {
     Button createTrip;
+    ImageButton back;
     EditText title, from, to, dateFrom, dateTo, description;
     List<Trip> list;
     int flag = 0;
@@ -32,29 +29,28 @@ public class NewTripActivity extends AppCompatActivity {
         dateFrom = findViewById(R.id.et_date_from);
         dateTo = findViewById(R.id.et_date_to);
         description = findViewById(R.id.et_description);
-        createTrip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trip trip = new Trip(getSharedPreferences("Authorisation", Context.MODE_PRIVATE)
-                        .getString("Account_ID", ""),
-                        title.getText().toString(),
-                        dateFrom.getText().toString(),
-                        dateTo.getText().toString(),
-                        description.getText().toString());
-                flag = 0;
-                new Thread(){
-                    @Override
-                    public void run() {
-                        TripManager.getInstance(getApplicationContext())
-                                .getTripDao().
-                                insertTrip(trip);
-                        flag = 1;
-                    }
-                }.start();
-                while (flag == 0) {}
-                TripManager.getAdapter(list).addTrip(trip);
-                finish();
-            }
+        back = findViewById(R.id.b_backtotrips);
+        back.setOnClickListener(v -> finish());
+        createTrip.setOnClickListener(v -> {
+            Trip trip = new Trip(getSharedPreferences("Authorisation", Context.MODE_PRIVATE)
+                    .getString("Account_ID", ""),
+                    title.getText().toString(),
+                    dateFrom.getText().toString(),
+                    dateTo.getText().toString(),
+                    description.getText().toString());
+            flag = 0;
+            new Thread(){
+                @Override
+                public void run() {
+                    TripManager.getInstance(getApplicationContext())
+                            .getTripDao().
+                            insertTrip(trip);
+                    flag = 1;
+                }
+            }.start();
+            while (flag == 0) {}
+            TripManager.getAdapter(list).addTrip(trip);
+            finish();
         });
     }
 }

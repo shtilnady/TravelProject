@@ -5,34 +5,39 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.Nullable;
 
 import com.example.travelproject.MyTripsActivity;
 import com.example.travelproject.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class EntryFragment extends Fragment {
     TextView wantToReg;
     Button enter;
     Fragment registryFragment;
-    EditText login;
-    EditText password;
-    AccountsDatabase accountsDatabase;
+    EditText etEmail;
+    EditText etPassword;
     SharedPreferences settings;
-    int flag = 0;
-    final Handler handler = new Handler();
-//    String pass = "";
-    public Account account;
-//    private static final String key = "Gj11cnegfvDe16Cg17R19R20";
-//    private static final String initVector = "yfFFbufrjptbayan";
+    FirebaseAuth auth;
+    ImageButton passwordEye;
+    boolean hide = true;
 
     @Nullable
     @Override
@@ -44,118 +49,62 @@ public class EntryFragment extends Fragment {
 
     @Override
     public void onStart() {
+        auth = FirebaseAuth.getInstance();
         wantToReg = getView().findViewById(R.id.wanttoreg);
         registryFragment = new RegistryFragment();
-        login = getView().findViewById(R.id.et_login);
-        password = getView().findViewById(R.id.et_entry_password);
-        accountsDatabase = AccountManager.getInstance(getContext());
-        wantToReg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .addToBackStack(null)
-                        .replace(R.id.l_entry, registryFragment)
-                        .commit();
-            }
-        });
+        etEmail = getView().findViewById(R.id.et_login);
+        etPassword = getView().findViewById(R.id.et_entry_password);
+        passwordEye = getView().findViewById(R.id.b_entry_show_password);
+        wantToReg.setOnClickListener(v -> getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.l_entry, registryFragment)
+                .commit());
         enter = getView().findViewById(R.id.b_enter);
-        enter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (password.getText() == null){
-                    Toast.makeText(getContext(), "Вы не ввели пароль", Toast.LENGTH_SHORT).show();
-                } else {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            synchronized (password.getText()) {
-                                flag = 0;
-                                if (accountsDatabase.getAccountDao().contains(login.getText().toString())) {
-                                    account = accountsDatabase
-                                            .getAccountDao()
-                                            .getAccount(login.getText().toString());
-                                    flag = 1;
-                                } else {
-                                    handler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(getContext(), "Нет пользователя с таким логином", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    flag = -1;
-                                }
-                            }
-                        }
-                    }.start();
-                }
-                while (flag == 0){ }
-                if (flag==1){
-                    if (password.getText().toString().equals(account.getPassword())) {
-                        AccountManager.logIn(account);
-                        settings = getActivity().getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putBoolean("Registered", true).apply();
-                        editor.putString("Account_ID", account.getLogin()).apply();
-                        editor.commit();
-                        Intent i = new Intent(getActivity(), MyTripsActivity.class);
-                        startActivity(i);
-                    } else {
-                        account = null;
-                        flag = 0;
-                        Toast.makeText(getContext(), "Неверный пароль", Toast.LENGTH_SHORT).show();
-                    }
-                }
-//                try {
-//                    IvParameterSpec iv = new IvParameterSpec(initVector.getBytes());
-//                    SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(), "AES");
-//                    Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-//                    cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-//                    new Thread() {
-//                        @Override
-//                        public void run() {
-//                            synchronized (cipher  ){
-//                                pass = accountsDatabase.getAccountDao().getPasswordWithId(Integer.parseInt(userID.getText().toString()));
-//                            }
-//                        }
-//                    }.start();
-//                    byte[] original = cipher.update(pass.getBytes());
-////                    pass = original.toString();
-//                    if (password.getText().toString().equals(pass)){
-//                        new Thread() {
-//                            @Override
-//                            public void run() {
-//                                account = accountsDatabase.getAccountDao().getAccount(Integer.parseInt(userID.getText().toString()));
-//                            }
-//                        }.start();
-//                        AccountManager.logIn(account);
-//                        Intent i = new Intent(getActivity(), MyTripsActivity.class);
-//                        startActivity(i);
-//                    } else {
-//                        System.out.println(original.toString());
-//                        Toast.makeText(getContext(), "Неверный пароль", Toast.LENGTH_SHORT).show();
-//                    }
-//                } catch (InvalidAlgorithmParameterException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getContext(), "InvalidAlgorithmParameterException", Toast.LENGTH_SHORT).show();
-//                } catch (NoSuchPaddingException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getContext(), "NoSuchPaddingException", Toast.LENGTH_SHORT).show();
-//                } catch (NoSuchAlgorithmException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getContext(), "NoSuchAlgorithmException", Toast.LENGTH_SHORT).show();
-////                } catch (BadPaddingException e) {
-////                    e.printStackTrace();
-////                    Toast.makeText(getContext(), "BadPaddingException", Toast.LENGTH_SHORT).show();
-//                } catch (InvalidKeyException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getContext(), "InvalidKeyException", Toast.LENGTH_SHORT).show();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getContext(), "Произошла ошибка при попытке расшифровать пароль", Toast.LENGTH_SHORT).show();
-//                }}
+        enter.setOnClickListener(v -> {
+            enterUser();
+        });
+        passwordEye.setOnClickListener(v -> {
+            if (hide) {
+                etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                hide = !hide;
+                passwordEye.setBackgroundResource(R.drawable.icon_opened_eye);
+            } else {
+                etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                hide = !hide;
+                passwordEye.setBackgroundResource(R.drawable.icon_closed_eye);
             }
         });
         super.onStart();
+    }
+
+    private void enterUser(){
+        String email = etEmail.getText().toString();
+        String password = etPassword.getText().toString();
+
+        if (TextUtils.isEmpty(email)){
+            etEmail.setError("Email не может быть пустым");
+            etEmail.requestFocus();
+        } else if (TextUtils.isEmpty(password)){
+            etPassword.setError("Пароль не может быть пустым");
+            etPassword.requestFocus();
+        } else {
+            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()){
+                        Toast.makeText(getContext(), "Вы успешно вошли", Toast.LENGTH_SHORT).show();
+                        settings = getActivity().getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putBoolean("Registered", true).apply();
+                        editor.putString("Account_ID", email).apply();
+                        editor.commit();
+                        startActivity(new Intent(getActivity(), MyTripsActivity.class));
+                    } else {
+                        Toast.makeText(getContext(), "Вход не удался: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
     }
 }

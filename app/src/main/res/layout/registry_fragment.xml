@@ -76,12 +76,12 @@
                 android:layout_height="wrap_content"
                 android:visibility="invisible"/>
             <View
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/mail"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/icon_email"
                 android:layout_gravity="center_vertical"/>
             <View
-                android:layout_width="10dp"
+                android:layout_width="5dp"
                 android:layout_height="wrap_content"
                 android:visibility="invisible"/>
             <EditText
@@ -89,12 +89,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="10"
-                android:hint="Логин"
+                android:hint="Email"
                 android:textColor="@color/dark_grey"
                 android:textColorHint="@color/light_grey"
                 android:textSize="18dp" />
             <View
-                android:layout_width="30dp"
+                android:layout_width="45dp"
                 android:layout_height="wrap_content"
                 android:visibility="invisible" />
         </LinearLayout>
@@ -117,12 +117,12 @@
                 android:layout_height="wrap_content"
                 android:visibility="invisible"/>
             <View
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/mail"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/icon_password"
                 android:layout_gravity="center_vertical"/>
             <View
-                android:layout_width="10dp"
+                android:layout_width="5dp"
                 android:layout_height="wrap_content"
                 android:visibility="invisible"/>
             <EditText
@@ -133,9 +133,15 @@
                 android:hint="Придумайте пароль"
                 android:textColor="@color/dark_grey"
                 android:textColorHint="@color/light_grey"
-                android:textSize="18dp" />
-            <View
+                android:textSize="18dp"
+                android:inputType="textPassword"/>
+            <ImageButton
+                android:id="@+id/b_create_password_show"
                 android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/icon_closed_eye" />
+            <View
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:visibility="invisible" />
         </LinearLayout>
@@ -158,14 +164,15 @@
                 android:layout_height="wrap_content"
                 android:visibility="invisible"/>
             <View
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/mail"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/icon_password2"
                 android:layout_gravity="center_vertical"/>
             <View
-                android:layout_width="10dp"
+                android:layout_width="5dp"
                 android:layout_height="wrap_content"
                 android:visibility="invisible"/>
+
             <EditText
                 android:id="@+id/et_repeat_password"
                 android:layout_width="match_parent"
@@ -174,9 +181,16 @@
                 android:hint="Повторите пароль"
                 android:textColor="@color/dark_grey"
                 android:textColorHint="@color/light_grey"
-                android:textSize="18dp" />
-            <View
+                android:textSize="18dp"
+                android:inputType="textPassword"/>
+
+            <ImageButton
+                android:id="@+id/b_repeat_password_show"
                 android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/icon_closed_eye" />
+            <View
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:visibility="invisible" />
         </LinearLayout>

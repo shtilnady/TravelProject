@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
 
-import com.example.travelproject.log.AccountManager;
 import com.example.travelproject.log.LogActivity;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.travelproject.databinding.ActivityMyTripsBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class MyTripsActivity extends AppCompatActivity {
@@ -31,6 +29,7 @@ public class MyTripsActivity extends AppCompatActivity {
     private ActivityMyTripsBinding binding;
     SharedPreferences settings;
     TextView accountLogin;
+    FirebaseAuth auth;
 
 
     @Override
@@ -39,28 +38,14 @@ public class MyTripsActivity extends AppCompatActivity {
         binding = ActivityMyTripsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.appBarMyTrips.toolbar);
-        binding.appBarMyTrips.bAddTrip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(view.getContext(), NewTripActivity.class);
-                startActivity(i);
-            }
+        binding.appBarMyTrips.bAddTrip.setOnClickListener(view -> {
+            Intent i = new Intent(view.getContext(), NewTripActivity.class);
+            startActivity(i);
         });
+        auth = FirebaseAuth.getInstance();
         settings = getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
-        new Thread(){
-            @Override
-            public void run() {
-                AccountManager
-                        .logIn(AccountManager
-                                .getInstance(getApplicationContext())
-                                .getAccountDao()
-                                .getAccount(settings.getString("Account_ID", ""))
-                        );
-            }
-        }.start();
-        while (AccountManager.getAccount() == null){}
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -81,19 +66,19 @@ public class MyTripsActivity extends AppCompatActivity {
         return true;
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        settings = getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
-//        switch (item.getItemId()) {
-//            case (R.id.action_exit):
-//                settings.edit().putBoolean("Registered", false);
-//                settings.edit().putString("Account_ID", "");
-//                Intent i = new Intent(this, LogActivity.class);
-//                startActivity(i);
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        settings = getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
+        switch (item.getItemId()) {
+            case (R.id.action_exit):
+                settings.edit().putBoolean("Registered", false);
+                settings.edit().putString("Account_ID", "");
+                auth.signOut();
+                startActivity(new Intent(this, LogActivity.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public boolean onSupportNavigateUp() {

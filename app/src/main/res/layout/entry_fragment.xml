@@ -74,13 +74,13 @@
                     android:visibility="invisible" />
 
                 <View
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/mail" />
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/icon_email"
+                    android:layout_gravity="center_vertical" />
 
                 <View
-                    android:layout_width="10dp"
+                    android:layout_width="5dp"
                     android:layout_height="wrap_content"
                     android:visibility="invisible" />
 
@@ -89,13 +89,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="10"
-                    android:hint="Логин"
+                    android:hint="Email"
                     android:textColor="@color/dark_grey"
                     android:textColorHint="@color/light_grey"
                     android:textSize="18dp" />
 
                 <View
-                    android:layout_width="30dp"
+                    android:layout_width="45dp"
                     android:layout_height="wrap_content"
                     android:visibility="invisible" />
             </LinearLayout>
@@ -123,13 +123,13 @@
                     android:visibility="invisible" />
 
                 <View
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/mail" />
+                    android:background="@drawable/icon_password" />
 
                 <View
-                    android:layout_width="10dp"
+                    android:layout_width="5dp"
                     android:layout_height="wrap_content"
                     android:visibility="invisible" />
 
@@ -141,10 +141,16 @@
                     android:hint="Пароль"
                     android:textColor="@color/dark_grey"
                     android:textColorHint="@color/light_grey"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:inputType="textPassword"/>
 
-                <View
+                <ImageButton
+                    android:id="@+id/b_entry_show_password"
                     android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/icon_closed_eye" />
+                <View
+                    android:layout_width="15dp"
                     android:layout_height="wrap_content"
                     android:visibility="invisible" />
             </LinearLayout>
