@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.List;
 
 public class NewTripActivity extends AppCompatActivity {
@@ -15,6 +19,8 @@ public class NewTripActivity extends AppCompatActivity {
     ImageButton back;
     EditText title, from, to, dateFrom, dateTo, description;
     List<Trip> list;
+    FirebaseAuth auth;
+    DatabaseReference database;
     int flag = 0;
 
     @Override
@@ -22,6 +28,8 @@ public class NewTripActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_trip);
         getSupportActionBar().hide();
+        database = FirebaseDatabase.getInstance().getReference();
+        auth = FirebaseAuth.getInstance();
         createTrip = findViewById(R.id.b_create_trip);
         title = findViewById(R.id.et_trip_title);
         from = findViewById(R.id.et_from);
@@ -35,9 +43,13 @@ public class NewTripActivity extends AppCompatActivity {
             Trip trip = new Trip(getSharedPreferences("Authorisation", Context.MODE_PRIVATE)
                     .getString("Account_ID", ""),
                     title.getText().toString(),
+                    from.getText().toString(),
+                    to.getText().toString(),
                     dateFrom.getText().toString(),
                     dateTo.getText().toString(),
                     description.getText().toString());
+            TripManager.getUser().trips.add(trip);
+            database.child("users").child(auth.getCurrentUser().getUid()).child("trips").push().setValue(trip);
             flag = 0;
             new Thread(){
                 @Override

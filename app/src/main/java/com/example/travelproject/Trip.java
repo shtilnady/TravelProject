@@ -13,20 +13,30 @@ public class Trip {
     @ColumnInfo @NotNull
     private String account_id;
     @ColumnInfo @NotNull
-    private String trip_title;
+    private String tripTitle;
+    @ColumnInfo @NotNull
+    private String placeFrom;
+    @ColumnInfo @NotNull
+    private String placeTo;
+    @ColumnInfo @NotNull
+    private String timeStart;
+    @ColumnInfo @NotNull
+    private String timeFinish;
     @ColumnInfo
     private String description;
-    @ColumnInfo @NotNull
-    private String start;
-    @ColumnInfo @NotNull
-    private String finish;
 
-    public Trip(String account_id, String trip_title, String start, String finish, String description){
+    public Trip(String account_id, String tripTitle, String placeFrom, String placeTo, String timeStart, String timeFinish, String description){
         this.account_id = account_id;
-        this.trip_title = trip_title;
-        this.start = start;
-        this.finish = finish;
+        this.tripTitle = tripTitle;
+        this.placeFrom = placeFrom;
+        this.placeTo = placeTo;
+        this.timeStart = timeStart;
+        this.timeFinish = timeFinish;
         this.description = description;
+    }
+
+    public Trip(){
+
     }
 
     public int getTrip_id() {
@@ -46,12 +56,48 @@ public class Trip {
     }
 
     @NotNull
-    public String getTrip_title() {
-        return trip_title;
+    public String getTripTitle() {
+        return tripTitle;
     }
 
-    public void setTrip_title(@NotNull String trip_title) {
-        this.trip_title = trip_title;
+    public void setTripTitle(@NotNull String tripTitle) {
+        this.tripTitle = tripTitle;
+    }
+
+    @NotNull
+    public String getPlaceFrom() {
+        return placeFrom;
+    }
+
+    public void setPlaceFrom(@NotNull String placeFrom) {
+        this.placeFrom = placeFrom;
+    }
+
+    @NotNull
+    public String getPlaceTo() {
+        return placeTo;
+    }
+
+    public void setPlaceTo(@NotNull String placeTo) {
+        this.placeTo = placeTo;
+    }
+
+    @NotNull
+    public String getTimeStart() {
+        return timeStart;
+    }
+
+    public void setTimeStart(@NotNull String timeStart) {
+        this.timeStart = timeStart;
+    }
+
+    @NotNull
+    public String getTimeFinish() {
+        return timeFinish;
+    }
+
+    public void setTimeFinish(@NotNull String timeFinish) {
+        this.timeFinish = timeFinish;
     }
 
     public String getDescription() {
@@ -60,23 +106,5 @@ public class Trip {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @NotNull
-    public String getStart() {
-        return start;
-    }
-
-    public void setStart(@NotNull String start) {
-        this.start = start;
-    }
-
-    @NotNull
-    public String getFinish() {
-        return finish;
-    }
-
-    public void setFinish(@NotNull String finish) {
-        this.finish = finish;
     }
 }

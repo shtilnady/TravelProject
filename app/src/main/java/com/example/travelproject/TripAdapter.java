@@ -1,7 +1,5 @@
 package com.example.travelproject;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
@@ -30,9 +27,9 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
-        holder.title.setText(list.get(position).getTrip_title());
-        holder.from.setText(list.get(position).getStart());
-        holder.to.setText(list.get(position).getFinish());
+        holder.title.setText(list.get(position).getTripTitle());
+        holder.from.setText(list.get(position).getTimeStart());
+        holder.to.setText(list.get(position).getTimeFinish());
     }
 
     @Override

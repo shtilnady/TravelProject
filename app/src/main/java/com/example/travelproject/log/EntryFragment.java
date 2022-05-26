@@ -1,13 +1,12 @@
 package com.example.travelproject.log;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +20,20 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.Nullable;
 
-import com.example.travelproject.MyTripsActivity;
 import com.example.travelproject.R;
+import com.example.travelproject.Trip;
+import com.example.travelproject.TripManager;
+import com.example.travelproject.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+//import com.google.gson.*;
 
 public class EntryFragment extends Fragment {
     TextView wantToReg;
@@ -36,6 +43,7 @@ public class EntryFragment extends Fragment {
     EditText etPassword;
     SharedPreferences settings;
     FirebaseAuth auth;
+    DatabaseReference database;
     ImageButton passwordEye;
     boolean hide = true;
 
@@ -49,6 +57,7 @@ public class EntryFragment extends Fragment {
 
     @Override
     public void onStart() {
+        database = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
         wantToReg = getView().findViewById(R.id.wanttoreg);
         registryFragment = new RegistryFragment();
@@ -93,13 +102,43 @@ public class EntryFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        Toast.makeText(getContext(), "Вы успешно вошли", Toast.LENGTH_SHORT).show();
-                        settings = getActivity().getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putBoolean("Registered", true).apply();
-                        editor.putString("Account_ID", email).apply();
-                        editor.commit();
-                        startActivity(new Intent(getActivity(), MyTripsActivity.class));
+                        database.child("users").child(auth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(getContext(), "Что-то пошло не так, повторите попытку позже", Toast.LENGTH_LONG).show();
+                                    Log.e("firebase", "Error getting data", task.getException());
+                                }
+                                else {
+                                    Toast.makeText(getContext(), "Вы успешно вошли", Toast.LENGTH_SHORT).show();
+                                    settings = getActivity().getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
+                                    TripManager.setUser(new User(
+                                            task.getResult().child("username").getValue().toString(),
+                                            task.getResult().child("email").getValue().toString()));
+                                    for (DataSnapshot snapshot: task.getResult().child("trips").getChildren()) {
+                                        Trip trip = snapshot.getValue(Trip.class);
+                                        TripManager.getUser().trips.add(trip);
+                                        Log.d("trip", trip.getTripTitle());
+                                    }
+                                    new Thread(){
+                                        @Override
+                                        public void run() {
+                                            TripManager.getInstance(getContext()).getTripDao().deleteAll();
+                                            for (Trip trip:TripManager.getUser().trips) {
+                                                TripManager.getInstance(getContext()).getTripDao().insertTrip(trip);
+                                                TripManager.getAdapter(new ArrayList<>()).addTrip(trip);
+                                            }
+                                        }
+                                    }.start();
+                                    SharedPreferences.Editor editor = settings.edit();
+                                    editor.putBoolean("Registered", true).apply();
+                                    editor.putString("Account_ID", email).apply();
+                                    editor.commit();
+                                    Log.d("firebase", "enter");
+                                    getActivity().finish();
+                                }
+                            }
+                        });
                     } else {
                         Toast.makeText(getContext(), "Вход не удался: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
