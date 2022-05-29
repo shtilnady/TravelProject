@@ -1,9 +1,13 @@
 package com.example.travelproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,7 +20,6 @@ import java.util.List;
 
 public class NewTripActivity extends AppCompatActivity {
     Button createTrip;
-    ImageButton back;
     EditText title, from, to, dateFrom, dateTo, description;
     List<Trip> list;
     FirebaseAuth auth;
@@ -27,7 +30,10 @@ public class NewTripActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_trip);
-        getSupportActionBar().hide();
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Новая поездка");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF82D296")));
         database = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
         createTrip = findViewById(R.id.b_create_trip);
@@ -37,8 +43,6 @@ public class NewTripActivity extends AppCompatActivity {
         dateFrom = findViewById(R.id.et_date_from);
         dateTo = findViewById(R.id.et_date_to);
         description = findViewById(R.id.et_description);
-        back = findViewById(R.id.b_backtotrips);
-        back.setOnClickListener(v -> finish());
         createTrip.setOnClickListener(v -> {
             Trip trip = new Trip(getSharedPreferences("Authorisation", Context.MODE_PRIVATE)
                     .getString("Account_ID", ""),
@@ -64,5 +68,15 @@ public class NewTripActivity extends AppCompatActivity {
             TripManager.getAdapter(list).addTrip(trip);
             finish();
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case (android.R.id.home):
+                super.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

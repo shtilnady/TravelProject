@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.yandex.mapkit.MapKitFactory;
 
 
 public class MyTripsActivity extends AppCompatActivity {
@@ -42,6 +45,7 @@ public class MyTripsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSharedPreferences("Authorisation", Context.MODE_PRIVATE).edit().putBoolean("ApiKey", false).commit();
         binding = ActivityMyTripsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.appBarMyTrips.toolbar);
@@ -101,8 +105,8 @@ public class MyTripsActivity extends AppCompatActivity {
         settings = getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
         switch (item.getItemId()) {
             case (R.id.action_exit):
-                settings.edit().putBoolean("Registered", false);
-                settings.edit().putString("Account_ID", "");
+                settings.edit().putBoolean("Registered", false).commit();
+                settings.edit().putString("Account_ID", "").commit();
                 new Thread(){
                     @Override
                     public void run() {
@@ -112,6 +116,7 @@ public class MyTripsActivity extends AppCompatActivity {
                 TripManager.setTripAdapter(null);
                 TripManager.setUser(null);
                 auth.signOut();
+                finish();
                 startActivity(new Intent(this, LogActivity.class));
                 return true;
         }

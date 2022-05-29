@@ -14,18 +14,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 
 public class LogActivity extends AppCompatActivity {
-    SharedPreferences settings;
-    FirebaseAuth auth;
-    DatabaseReference database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log);
         getSupportActionBar().hide();
-        auth = FirebaseAuth.getInstance();
-        settings = getSharedPreferences("Authorisation", Context.MODE_PRIVATE);
-        database = FirebaseDatabase.getInstance().getReference();
         Fragment entryFragment = new EntryFragment();
         getSupportFragmentManager()
                 .beginTransaction()

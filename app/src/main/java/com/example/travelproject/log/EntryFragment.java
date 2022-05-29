@@ -1,6 +1,7 @@
 package com.example.travelproject.log;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.Nullable;
 
+import com.example.travelproject.MyTripsActivity;
 import com.example.travelproject.R;
 import com.example.travelproject.Trip;
 import com.example.travelproject.TripManager;
@@ -33,7 +35,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-//import com.google.gson.*;
 
 public class EntryFragment extends Fragment {
     TextView wantToReg;
@@ -136,6 +137,7 @@ public class EntryFragment extends Fragment {
                                     editor.commit();
                                     Log.d("firebase", "enter");
                                     getActivity().finish();
+                                    startActivity(new Intent(getContext(), MyTripsActivity.class));
                                 }
                             }
                         });
